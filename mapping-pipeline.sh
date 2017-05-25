@@ -34,7 +34,7 @@ module load bedtools
 
 for x in mapping-data/*sorted; do echo "bamToBed -i $x > $x.bed"; done > bamtobed.sh
 cat bamtobed.sh | $PAR_PATH/parallel
-for x in mapping-data/*bed; do echo "coverageBed -a $x -b $CONTIGS_FILE.bed -d > $x.bed2"; done > coveragebed.sh
+for x in mapping-data/*bed; do echo "coverageBed -a $CONTIGS_FILE.bed -b $x -d > $x.bed2"; done > coveragebed.sh
 cat coveragebed.sh | $PAR_PATH/parallel
 for x in mapping-data/*bed2; do echo "python bedcoverage-to-coverage.py $x > $x.counts"; done > bedcoveragefinal.sh
 cat bedcoveragefinal.sh | $PAR_PATH/parallel
