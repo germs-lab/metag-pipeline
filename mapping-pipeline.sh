@@ -31,6 +31,7 @@ for x in mapping-data/*sorted; do echo "$SAMTOOLS_PATH/samtools idxstats $x > $x
 cat samtools-idx.sh | $PAR_PATH/parallel
 
 module load bedtools
+python coverage-bed-reference.py $CONTIGS_FILE > $CONTIGS_FILE.bed
 
 for x in mapping-data/*sorted; do echo "bamToBed -i $x > $x.bed"; done > bamtobed.sh
 cat bamtobed.sh | $PAR_PATH/parallel
