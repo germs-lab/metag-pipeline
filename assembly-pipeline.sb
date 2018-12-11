@@ -1,0 +1,24 @@
+#!/bin/bash -login
+#SBATCH --time=160:00:00
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=12
+#SBATCH --mem=400G
+#SBATCH --job-name assembly
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=howead@msu.edu
+#SBATCH --account shadeash-colej
+
+MY_PATH=/mnt/scratch/howead/tomas-metag-pipeline
+ASSEMBLER_PATH=/mnt/home/howead//software/megahit-1.1.3/
+THREADS=12
+MEM=400e9
+TRIMMED_READS_PATH=/mnt/scratch/howead/tomas-metag-pipeline/trimmed-reads
+PAR_PATH=~/software/parallel-20180922/src/
+
+cd $MY_PATH
+#echo "cat $TRIMMED_READS_PATH/*pe1 >> $TRIMMED_READS_PATH/pe1.fq" > pre-assembly-wrangle.sh
+#echo "cat $TRIMMED_READS_PATH/*pe2 >> $TRIMMED_READS_PATH/pe2.fq" >> pre-assembly-wrangle.sh
+#echo "cat $TRIMMED_READS_PATH/*se12 >> $TRIMMED_READS_PATH/se12.fq" >> pre-assembly-wrangle.sh
+#cat pre-assembly-wrangle.sh | $PAR_PATH/parallel
+echo "$ASSEMBLER_PATH/megahit --kmin-1pass -1 $TRIMMED_READS_PATH/pe1.fq -2 $TRIMMED_READS_PATH/pe2.fq -r $TRIMMED_READS_PATH/se12.fq --presets meta-large -o assembly -m $MEM" > megahit.sh
+bash megahit.sh
