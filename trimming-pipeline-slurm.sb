@@ -1,9 +1,10 @@
 #!/bin/bash -login
-#SBATCH --time=72:00:00             # limit of wall clock time - how long the job will run (same as -t)
-#SBATCH --ntasks=8                  # number of tasks - how many tasks (nodes) that you require (same as -n)
-#SBATCH --cpus-per-task=1           # number of CPUs (or cores) per task (same as -c)
-#SBATCH --mem=50G                  # memory required per node - amount of memory (in bytes)
-#SBATCH --job-name trimming      # you can give your job a name for easier identification (same as -J)
+#SBATCH --time=72:00:00          
+#SBATCH --ntasks=8               
+#SBATCH --cpus-per-task=1        
+#SBATCH --mem=50G                
+#SBATCH --job-name trimming      
+#SBATCH --mail-type=ALL
 #SBATCH --mail-user=howead@msu.edu
 #SBATCH --account shadeash-colej
 
@@ -19,16 +20,16 @@ parallel="/mnt/home/howead/software/parallel-20120122/src/parallel"
 
 
 cd $MY_PATH
-#mkdir trimmed-reads
-#for x in *R1_001*gz;
-#do
-#echo "java -jar $TRIM_PATH/trimmomatic-0.38.jar PE -phred33 -threads $THREADS_TRIMMING $x ${x%R1*}R2_001*fastq.gz trimmed-reads/${x%R1*}pe1 trimmed-reads/${x%R1*}se1 trimmed-reads/${x%R1*}pe2 trimmed-reads/${x%R1*}se2 ILLUMINACLIP:$TRIM_PATH/adapters/NexteraPE-PE.fa:2:30:10:8:TRUE LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:36" >> trim.sh
-#done
+mkdir trimmed-reads
+for x in *R1_001*gz;
+do
+echo "java -jar $TRIM_PATH/trimmomatic-0.38.jar PE -phred33 -threads $THREADS_TRIMMING $x ${x%R1*}R2_001*fastq.gz trimmed-reads/${x%R1*}pe1 trimmed-reads/${x%R1*}se1 trimmed-reads/${x%R1*}pe2 trimmed-reads/${x%R1*}se2 ILLUMINACLIP:$TRIM_PATH/adapters/NexteraPE-PE.fa:2:30:10:8:TRUE LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:36" >> trim.sh
+done
 
-#cat trim.sh | ~/software/parallel-20180922/src/parallel --delay .2 -j 32 --joblog logs/runtask.log --resume
+cat trim.sh | ~/software/parallel-20180922/src/parallel 
 
-cd trimmed-reads
-for x in *se1; do echo "cat $x ${x%se1*}se2 > ${x%se1}se12"; done >> cat_se.sh
-cat cat_se.sh | ~/software/parallel-20180922/src/parallel --delay .2 -j 32 --joblog logs/runtask2.log --resume
+#cd trimmed-reads
+#for x in *se1; do echo "cat $x ${x%se1*}se2 > ${x%se1}se12"; done >> cat_se.sh
+#cat cat_se.sh | ~/software/parallel-20180922/src/parallel --delay .2 -j 32 --joblog logs/runtask2.log --resume
 
 
